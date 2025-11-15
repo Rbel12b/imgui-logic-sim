@@ -26,7 +26,7 @@
 
 namespace Utils
 {
-    static const std::string appName = "{{PROJECT_NAME}}";
+    static const std::string appName = "imgui-logic-sim";
 
 // Windows helper
 #ifdef _WIN32

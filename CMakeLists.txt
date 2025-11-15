@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(APP_NAME        "{{PROJECT_NAME}}")
+set(APP_NAME        "imgui-logic-sim")
 set(APP_EXECUTABLE  "${APP_NAME}")
 set(VERSION_FILE    ".version")
 set(VERSION_FILE_OUT    "${CMAKE_BINARY_DIR}/version.def")

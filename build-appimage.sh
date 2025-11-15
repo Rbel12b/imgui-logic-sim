@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-APP={{PROJECT_NAME}}
+APP=imgui-logic-sim
 VERSION=$(cat .version)
 BUILD_DIR=build-linux
 APPDIR=$BUILD_DIR/AppDir

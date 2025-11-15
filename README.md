@@ -1,18 +1,6 @@
-# {{PROJECT_NAME}}
+# imgui-logic-sim
 
-A c++ project with imgui and cmake.
-
-## Setup
-
-Run the folowing to set the project name.
-
-```bash
-./init_name.py
-```
-
-After this running it again will not do anything.
-
-For debugging, run the `setup.sh` to link the required files into the build directory (for creating bundles this isn't needed).
+A c++ logic simulator built from a node editor, with imgui.
 
 ## Building
 
