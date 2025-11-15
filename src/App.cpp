@@ -15,6 +15,7 @@ App::App()
                            static_cast<size_t>(____version_len));
     state.version = new Version(versionStr);
     state.updater = new Updater();
+    state.nodeEditor = new NodeEditor();
 }
 
 App::~App()
@@ -30,10 +31,20 @@ App::~App()
         delete state.updater;
         state.updater = nullptr;
     }
+
+    if (state.nodeEditor)
+    {
+        delete state.nodeEditor;
+        state.nodeEditor = nullptr;
+    }
 }
 
 void App::init()
 {
+    state.nodeEditor->addNode(VM::NodeType::NOT);
+    state.nodeEditor->addNode(VM::NodeType::AND);
+    state.nodeEditor->addNode(VM::NodeType::OR);
+    state.nodeEditor->set_size(ImVec2(400, 640));
 }
 
 void App::render()
@@ -116,18 +127,6 @@ int App::run(int argc, char **argv, std::filesystem::path logFile)
     {
         std::cout << "updating...\n";
         state.updater->update(state);
-    }
-
-    if (state.version)
-    {
-        delete state.version;
-        state.version = nullptr;
-    }
-
-    if (state.updater)
-    {
-        delete state.updater;
-        state.updater = nullptr;
     }
 
     return 0;

@@ -53,6 +53,9 @@ void GUI::renderMain(AppState &state)
     {
         return;
     }
+    auto size = ImGui::GetContentRegionAvail();
+    state.nodeEditor->set_size(size);
+    state.nodeEditor->draw();
     ImGui::End();
 }
 

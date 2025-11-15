@@ -2,8 +2,8 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include "imgui.h"
 #include "AppState.hpp"
+#include "imgui.h"
 
 class GUI
 {

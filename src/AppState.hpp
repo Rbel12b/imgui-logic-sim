@@ -4,7 +4,7 @@
 
 class AppState;
 
-#include "imgui.h"
+#include "Nodes.hpp"
 #include "SDL2/SDL.h"
 #include <filesystem>
 #include <string>
@@ -13,6 +13,7 @@ class AppState;
 #include <cstdint>
 #include "Renderer.hpp"
 #include "Updater.hpp"
+#include "imgui.h"
 
 class AppState
 {
@@ -43,6 +44,8 @@ public:
         std::string msg;
         bool errorLog = false;
     } showFile;
+
+    NodeEditor* nodeEditor = nullptr;
 };
 
 #endif // APP_STATE_H

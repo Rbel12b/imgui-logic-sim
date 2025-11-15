@@ -1,8 +1,8 @@
 #pragma once
 #ifndef APP_H
 #define APP_H
-#include "Renderer.hpp"
 #include "GUI.hpp"
+#include "Renderer.hpp"
 #include "AppState.hpp"
 
 class App

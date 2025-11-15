@@ -8,8 +8,8 @@ class Renderer;
 #include <thread>
 #include <atomic>
 #include <SDL2/SDL.h>
-#include "imgui.h"
 #include "AppState.hpp"
+#include "imgui.h"
 
 class Renderer
 {
