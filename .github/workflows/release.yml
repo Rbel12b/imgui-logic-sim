@@ -17,17 +17,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Initialize project name if default
-        id: init_name
-        run: |
-          if [ "${PROJECT_NAME}" = "imgui-logic-sim" ]; then
-            echo "Project name is still default — initializing..."
-            echo "imgui-cpp-template" | python3 ./init_name.py
-            echo "PROJECT_NAME=imgui-cpp-template" >> $GITHUB_ENV
-          else
-            echo "Project name already set to: ${PROJECT_NAME}"
-          fi
-
       - name: Set up dependencies (Linux + MinGW-w64)
         run: |
           sudo apt-get update
