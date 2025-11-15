@@ -24,9 +24,10 @@
 #include <fcntl.h>
 #endif
 
+const std::string AppState::appName = "imgui-logic-sim";
+
 namespace Utils
 {
-    static const std::string appName = "imgui-logic-sim";
 
 // Windows helper
 #ifdef _WIN32
@@ -138,7 +139,7 @@ namespace Utils
         {
             dataDir = home;
             dataDir /= ".config";
-            dataDir /= appName;
+            dataDir /= AppState::appName;
         }
 #endif
 
@@ -167,7 +168,7 @@ namespace Utils
         if (!tmp || *tmp == '\0')
             tmp = "/tmp";
         tempDir = tmp;
-        tempDir /= appName;
+        tempDir /= AppState::appName;
 #endif
 
         if (!tempDir.empty() && !std::filesystem::exists(tempDir))

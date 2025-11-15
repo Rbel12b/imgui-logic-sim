@@ -7,7 +7,7 @@
 bool Updater::checkUpdate(AppState &state)
 {
     auto versionFilePath = Utils::getUserDataDir() / ".version";
-    if (!Utils::downloadFile(state.repoUrl + "/releases/latest/download/.version", versionFilePath, state))
+    if (!Utils::downloadFile(state.repoUrl + "/releases/latest/download/" + AppState::appName + ".version", versionFilePath, state))
     {
         std::cout << "Failed to get latest version number";
         return false;
@@ -39,8 +39,8 @@ bool Updater::checkUpdate(AppState &state)
 bool Updater::downloadUpdate(AppState &state)
 {
 #ifdef _WIN32
-    auto newExePath = Utils::getUserDataDir() / "yt-dlp-beets-installer.exe";
-    if (!Utils::downloadFile(state.repoUrl + "/releases/latest/download/yt-dlp-beets-installer-win64.exe", newExePath, state))
+    auto newExePath = Utils::getUserDataDir() / (AppState::appName + "-installer.exe");
+    if (!Utils::downloadFile(state.repoUrl + ("/releases/latest/download/" + AppState::appName + "-installer-win64.exe"), newExePath, state))
     {
         std::cout << "Failed to get latest appimage";
         return true;
@@ -48,7 +48,7 @@ bool Updater::downloadUpdate(AppState &state)
 #else
     auto exePath = Utils::getExecutable();
     auto newExePath = exePath.string() + ".new";
-    if (!Utils::downloadFile(state.repoUrl + "/releases/latest/download/yt-dlp-beets.AppImage", newExePath, state))
+    if (!Utils::downloadFile(state.repoUrl + "/releases/latest/download/" + AppState::appName + ".AppImage", newExePath, state))
     {
         std::cout << "Failed to get latest appimage";
         return true;
@@ -60,7 +60,7 @@ bool Updater::downloadUpdate(AppState &state)
 void Updater::update(AppState &state)
 {
 #ifdef _WIN32
-    auto newExePath = Utils::getUserDataDir() / "yt-dlp-beets-installer.exe";
+    auto newExePath = Utils::getUserDataDir() / AppState::appName + "-installer.exe";
     if (!std::filesystem::exists(newExePath))
     {
         std::cout << "latest installer not found, maybe download it?";

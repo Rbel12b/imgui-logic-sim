@@ -18,6 +18,7 @@ class AppState;
 class AppState
 {
 public:
+    static const std::string appName;
     Renderer *renderer;
     bool progamShouldExit = false;
     ImVec2 mainWindowSize = ImVec2(0, 0);
