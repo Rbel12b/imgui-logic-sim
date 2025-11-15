@@ -164,6 +164,14 @@ uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id)
     default:
         break;
     }
+    if (node.outputs[0].size == 1)
+    {
+        inf_node->getOuts()[0]->setStyle(val ? ImFlow::PinStyle::red() : ImFlow::PinStyle::blue());
+    }
+    else
+    {
+        inf_node->getOuts()[0]->setStyle(ImFlow::PinStyle::brown());
+    }
     return val;
 }
 
