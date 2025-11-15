@@ -1,0 +1,115 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "*" # any tag
+
+env:
+  PROJECT_NAME: "{{PROJECT_NAME}}"
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Initialize project name if default
+        id: init_name
+        run: |
+          if [ "${PROJECT_NAME}" = "{{PROJECT_NAME}}" ]; then
+            echo "Project name is still default — initializing..."
+            echo "imgui-cpp-template" | python3 ./init_name.py
+            echo "PROJECT_NAME=imgui-cpp-template" >> $GITHUB_ENV
+          else
+            echo "Project name already set to: ${PROJECT_NAME}"
+          fi
+
+      - name: Set up dependencies (Linux + MinGW-w64)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake ninja-build build-essential pkg-config \
+            libsdl2-dev libsdl2-2.0-0 \
+            libcurl4-openssl-dev curl \
+            imagemagick zip file
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+
+      - name: Install linuxdeploy
+        run: |
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage \
+            -O linuxdeploy.AppImage
+          chmod +x linuxdeploy.AppImage
+          sudo mv linuxdeploy.AppImage /usr/local/bin/linuxdeploy
+          linuxdeploy --version
+
+      - name: Verify tools
+        run: |
+          cmake --version
+          xxd --version || echo "xxd from vim-common"
+          # Handle both ImageMagick v7 (`magick`) and v6 (`convert`)
+          if command -v magick >/dev/null 2>&1; then
+            echo "ImageMagick version:"
+            magick -version
+          elif command -v convert >/dev/null 2>&1; then
+            echo "Using legacy ImageMagick binary:"
+            convert -version
+            # create a shim so 'magick' works too
+            sudo ln -s $(command -v convert) /usr/local/bin/magick
+          else
+            echo "ImageMagick not found — installing now"
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+          fi
+
+      - name: Generate changelog / release notes
+        id: notes
+        run: |
+          TAG=${GITHUB_REF##refs/tags/}
+          echo "Generating release notes for tag $TAG"
+          # Use git log to get commits since previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 ${TAG}^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            git log --pretty=format:"* %s (%an)" HEAD
+          else
+            git log ${PREV_TAG}..HEAD --pretty=format:"* %s (%an)"
+          fi > release_notes.md
+          NOTES=$(sed ':a;N;$!ba;s/\n/\\n/g' release_notes.md)
+          echo "::set-output name=body::$(printf "## Changes for %s\n\n%s" "$TAG" "$NOTES")"
+
+      - name: Build Linux AppImage
+        run: |
+          chmod +x ./build-appimage.sh
+          ./build-appimage.sh
+
+      - name: Rename release artifacts
+        run: |
+          mkdir -p release
+          cp .version "release/${PROJECT_NAME}.version"
+          cp ${PROJECT_NAME}-x86_64.AppImage "release/${PROJECT_NAME}.AppImage"
+          cp build-linux/${PROJECT_NAME} release/${PROJECT_NAME}
+          ls -lh release/
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          body: ${{ steps.notes.outputs.body }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/${{ env.PROJECT_NAME }}.version
+            release/${{ env.PROJECT_NAME }}.AppImage
+            release/${{ env.PROJECT_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,48 @@
+#pragma once
+#ifndef APP_STATE_H
+#define APP_STATE_H
+
+class AppState;
+
+#include "imgui.h"
+#include "SDL2/SDL.h"
+#include <filesystem>
+#include <string>
+#include <vector>
+#include <atomic>
+#include <cstdint>
+#include "Renderer.hpp"
+#include "Updater.hpp"
+
+class AppState
+{
+public:
+    Renderer* renderer;
+    bool progamShouldExit = false;
+    ImVec2 mainWindowSize = ImVec2(0, 0);
+    std::filesystem::path logFile;
+    Version* version = nullptr;
+    bool readyForUpdate = false;
+    std::string repoUrl = "https://github.com/Rbel12b/imgui-cpp-template";
+    Updater *updater;
+    bool newVersionPopup = false;
+    bool downloadUpdate = false;
+
+    struct
+    {
+        bool enabled = false;
+        std::string text = "";
+        int progress = -1;
+        bool progressDisabled = true;
+    } commandInProgress;
+    
+    struct
+    {
+        bool enabled = false;
+        std::filesystem::path filePath;
+        std::string msg;
+        bool errorLog = false;
+    } showFile;
+};
+
+#endif // APP_STATE_H

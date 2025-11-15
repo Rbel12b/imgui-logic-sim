@@ -1,0 +1,9 @@
+[submodule "thirdparty/lib/CMakeForImGui"]
+	path = thirdparty/lib/CMakeForImGui
+	url = https://github.com/adembudak/CMakeForImGui.git
+[submodule "thirdparty/lib/imgui"]
+	path = thirdparty/lib/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "thirdparty/lib/cpplib"]
+	path = thirdparty/lib/cpplib
+	url = https://github.com/Rbel12b/cpplib
