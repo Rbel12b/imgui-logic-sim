@@ -7,3 +7,6 @@
 [submodule "thirdparty/lib/cpplib"]
 	path = thirdparty/lib/cpplib
 	url = https://github.com/Rbel12b/cpplib
+[submodule "thirdparty/lib/ImNodeFlow"]
+	path = thirdparty/lib/ImNodeFlow
+	url = https://github.com/Fattorino/ImNodeFlow.git
