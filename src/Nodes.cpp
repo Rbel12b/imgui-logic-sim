@@ -23,11 +23,11 @@ CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
     {
         if (node.type == VM::NodeType::CUSTOM)
         {
-            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, node.outputs[i].name)->behaviour([this](){return m_vm.getOutput(this, m_id);});
+            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, node.outputs[i].name)->behaviour([this, i](){return m_vm.getOutput(this, m_id, i);});
         }
         else
         {
-            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, "Q")->behaviour([this](){return m_vm.getOutput(this, m_id);});
+            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, "Q")->behaviour([this,i](){return m_vm.getOutput(this, m_id, i);});
         }
     }
 }

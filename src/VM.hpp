@@ -28,7 +28,7 @@ public:
 
     struct Node
     {
-        using customComputeFunction = std::function<uint64_t(Node &)>;
+        using customComputeFunction = std::function<uint64_t(VM&, VM::NodeId&, ImFlow::BaseNode*, size_t)>;
 
         struct IOPin
         {
@@ -61,7 +61,7 @@ public:
 
     Node &getNode(NodeId id);
 
-    uint64_t getOutput(ImFlow::BaseNode *inf_node, NodeId id);
+    uint64_t getOutput(ImFlow::BaseNode *inf_node, NodeId id, size_t outnum);
 
     // void registerLink(NodeId from, size_t fromNum, NodeId to, size_t toNum);
 

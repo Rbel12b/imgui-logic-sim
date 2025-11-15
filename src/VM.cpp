@@ -109,7 +109,7 @@ VM::Node &VM::getNode(NodeId id)
     return m_nodeData[id];
 }
 
-uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id)
+uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id, size_t outnum)
 {
     if (id == 0)
     {
@@ -129,7 +129,7 @@ uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id)
     case NodeType::CUSTOM:
         if (node.computeIO)
         {
-            val = node.computeIO(node);
+            val = node.computeIO(*this, node.id, inf_node, outnum);
         }
         break;
 
@@ -164,13 +164,13 @@ uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id)
     default:
         break;
     }
-    if (node.outputs[0].size == 1)
+    if (node.outputs[outnum].size == 1)
     {
-        inf_node->getOuts()[0]->setStyle(val ? ImFlow::PinStyle::red() : ImFlow::PinStyle::blue());
+        inf_node->getOuts()[outnum]->setStyle(val ? ImFlow::PinStyle::red() : ImFlow::PinStyle::blue());
     }
     else
     {
-        inf_node->getOuts()[0]->setStyle(ImFlow::PinStyle::brown());
+        inf_node->getOuts()[outnum]->setStyle(ImFlow::PinStyle::brown());
     }
     return val;
 }
