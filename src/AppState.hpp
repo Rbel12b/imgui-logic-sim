@@ -18,13 +18,13 @@ class AppState;
 class AppState
 {
 public:
-    Renderer* renderer;
+    Renderer *renderer;
     bool progamShouldExit = false;
     ImVec2 mainWindowSize = ImVec2(0, 0);
     std::filesystem::path logFile;
-    Version* version = nullptr;
+    Version *version = nullptr;
     bool readyForUpdate = false;
-    std::string repoUrl = "https://github.com/Rbel12b/imgui-cpp-template";
+    std::string repoUrl = "https://github.com/Rbel12b/imgui-logic-sim";
     Updater *updater;
     bool newVersionPopup = false;
     bool downloadUpdate = false;
@@ -36,7 +36,7 @@ public:
         int progress = -1;
         bool progressDisabled = true;
     } commandInProgress;
-    
+
     struct
     {
         bool enabled = false;
@@ -45,7 +45,7 @@ public:
         bool errorLog = false;
     } showFile;
 
-    NodeEditor* nodeEditor = nullptr;
+    NodeEditor *nodeEditor = nullptr;
 };
 
 #endif // APP_STATE_H

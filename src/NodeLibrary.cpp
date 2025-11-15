@@ -122,7 +122,7 @@ namespace NodeLibrary
     {
         auto &node = vm.getNode(id);
         ImGui::SetNextItemWidth(80.0f);
-        if (ImGui::InputInt("", (int*)&node.n_data))
+        if (ImGui::InputInt("", (int *)&node.n_data))
         {
             if (node.n_data > 64)
             {
@@ -140,7 +140,8 @@ namespace NodeLibrary
             for (size_t i = 0; i < node.n_data; i++)
             {
                 node.outputs.push_back({1, std::to_string(i), 0, vm.getNewPinId()});
-                inf_node.addOUT_uid<uint64_t>(node.outputs[i].id, std::to_string(i))->behaviour([&vm, &id, &inf_node, i](){return vm.getOutput(&inf_node, id, i);});
+                inf_node.addOUT_uid<uint64_t>(node.outputs[i].id, std::to_string(i))->behaviour([&vm, &id, &inf_node, i]()
+                                                                                                { return vm.getOutput(&inf_node, id, i); });
             }
             node.inputs[0].size = node.n_data;
         }
@@ -169,7 +170,7 @@ namespace NodeLibrary
     {
         auto &node = vm.getNode(id);
         ImGui::SetNextItemWidth(80.0f);
-        if (ImGui::InputInt("", (int*)&node.n_data))
+        if (ImGui::InputInt("", (int *)&node.n_data))
         {
             if (node.n_data > 64)
             {

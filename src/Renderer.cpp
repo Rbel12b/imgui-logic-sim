@@ -225,7 +225,7 @@ ImVec2 Renderer::getWindowSize() const
 
 void Renderer::setupFonts()
 {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
     io.Fonts->Clear();
 
     ImFontGlyphRangesBuilder builder;
@@ -239,9 +239,9 @@ void Renderer::setupFonts()
     static std::vector<ImWchar> s_FontRangesContainer;
     s_FontRangesContainer.assign(out_ranges.Data, out_ranges.Data + out_ranges.Size);
 
-    const ImWchar* glyph_ranges = s_FontRangesContainer.data();
+    const ImWchar *glyph_ranges = s_FontRangesContainer.data();
 
-    const char* font_filename = "NotoSans-Regular.ttf";  
+    const char *font_filename = "NotoSans-Regular.ttf";
     std::string font_path = Utils::getBundledFilePath(std::filesystem::path(font_filename)).string();
 
     float font_size_px = 18.0f;
@@ -251,8 +251,9 @@ void Renderer::setupFonts()
     font_cfg.OversampleV = 1;
     font_cfg.PixelSnapH = true;
 
-    ImFont* font = io.Fonts->AddFontFromFileTTF(font_path.c_str(), font_size_px, &font_cfg, glyph_ranges);
-    if (font == nullptr) {
+    ImFont *font = io.Fonts->AddFontFromFileTTF(font_path.c_str(), font_size_px, &font_cfg, glyph_ranges);
+    if (font == nullptr)
+    {
         std::cerr << "Failed to load font from: " << font_path << std::endl;
         assert(false && "Font load failed");
     }

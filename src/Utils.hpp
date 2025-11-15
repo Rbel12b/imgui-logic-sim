@@ -9,7 +9,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include <shlobj.h> // For SHGetKnownFolderPath
+#include <shlobj.h>     // For SHGetKnownFolderPath
 #include <combaseapi.h> // CoTaskMemFree
 #else
 #include <cstdlib>
@@ -49,7 +49,7 @@ namespace Utils
      * @param url remote file URL
      * @param dest local path to save the file
      */
-    bool downloadFile(const std::string &url, const std::filesystem::path &dest, AppState& state);
+    bool downloadFile(const std::string &url, const std::filesystem::path &dest, AppState &state);
 }
 
 #endif // UTILS_HPP

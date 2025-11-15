@@ -29,13 +29,13 @@ int main(int argc, char **argv)
     }
     std::string logFile = logFilePath.string();
     // Redirect C I/O
-    FILE* f1 = freopen(logFile.c_str(), "w", stdout);
-    FILE* f2 = freopen(logFile.c_str(), "a", stderr);
+    FILE *f1 = freopen(logFile.c_str(), "w", stdout);
+    FILE *f2 = freopen(logFile.c_str(), "a", stderr);
 
     // Redirect C++ streams as well
     std::ofstream out(logFile, std::ios::app);
-    auto* oldCout = std::cout.rdbuf(out.rdbuf());
-    auto* oldCerr = std::cerr.rdbuf(out.rdbuf());
+    auto *oldCout = std::cout.rdbuf(out.rdbuf());
+    auto *oldCerr = std::cerr.rdbuf(out.rdbuf());
 
     int ret = app.run(argc, argv, logFilePath);
 

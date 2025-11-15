@@ -35,32 +35,32 @@ public:
         return 0; // equal
     }
 
-    bool operator>(const Version& v2) const
+    bool operator>(const Version &v2) const
     {
         return compareVersions(this->m_version, v2.m_version) > 0;
     }
 
-    bool operator<(const Version& v2) const
+    bool operator<(const Version &v2) const
     {
         return compareVersions(this->m_version, v2.m_version) < 0;
     }
 
-    bool operator==(const Version& v2) const
+    bool operator==(const Version &v2) const
     {
         return compareVersions(this->m_version, v2.m_version) == 0;
     }
 
-    bool operator!=(const Version& v2) const
+    bool operator!=(const Version &v2) const
     {
         return !(*this == v2);
     }
 
-    bool operator<=(const Version& v2) const
+    bool operator<=(const Version &v2) const
     {
         return !(*this > v2);
     }
 
-    bool operator>=(const Version& v2) const
+    bool operator>=(const Version &v2) const
     {
         return !(*this < v2);
     }
@@ -82,9 +82,9 @@ public:
 class Updater
 {
 public:
-    bool checkUpdate(AppState& state);
-    bool downloadUpdate(AppState& state);
-    void update(AppState& state);
+    bool checkUpdate(AppState &state);
+    bool downloadUpdate(AppState &state);
+    void update(AppState &state);
 
     bool updateAvailable = false;
 };

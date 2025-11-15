@@ -16,7 +16,7 @@ public:
 private:
     void init();
     void render();
-    void keyCallback(const SDL_KeyboardEvent&);
+    void keyCallback(const SDL_KeyboardEvent &);
 
     Renderer renderer;
     GUI gui;

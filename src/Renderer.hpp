@@ -16,19 +16,23 @@ class Renderer
 public:
     Renderer();
     ~Renderer();
-    
-    void setRenderFunction(std::function<void()> func);
-    void setKeyCallback(std::function<void(const SDL_KeyboardEvent&)> func);
 
-    int startRenderLoop(AppState* _state);
+    void setRenderFunction(std::function<void()> func);
+    void setKeyCallback(std::function<void(const SDL_KeyboardEvent &)> func);
+
+    int startRenderLoop(AppState *_state);
 
     bool isRunning() const { return running; }
 
-    void join() { if (renderThread.joinable()) renderThread.join(); }
+    void join()
+    {
+        if (renderThread.joinable())
+            renderThread.join();
+    }
 
     ImVec2 getWindowSize() const;
 
-    void* createTextureFromRGBA(const unsigned char* rgba, int width, int height);
+    void *createTextureFromRGBA(const unsigned char *rgba, int width, int height);
 
 private:
     int init();
@@ -43,13 +47,13 @@ private:
 
 private:
     std::function<void()> renderFunction;
-    std::function<void(const SDL_KeyboardEvent&)> keyCallBack;
+    std::function<void(const SDL_KeyboardEvent &)> keyCallBack;
     bool initialized;
     std::atomic<bool> running;
     std::thread renderThread;
     SDL_Window *window;
     SDL_Renderer *renderer;
-    AppState* state;
+    AppState *state;
 };
 
 #endif // RENDERER_HPP

@@ -1,7 +1,7 @@
 #include "Nodes.hpp"
 
 CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
- : m_vm(vm), m_id(id), m_drawfunc(drawfunc)
+    : m_vm(vm), m_id(id), m_drawfunc(drawfunc)
 {
     auto node = m_vm.getNode(id);
 
@@ -18,16 +18,18 @@ CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
             ImFlow::BaseNode::addIN_uid<uint64_t>(node.inputs[i].id, i ? "B" : "A", 0, ImFlow::ConnectionFilter::SameType());
         }
     }
-    
+
     for (size_t i = 0; i < node.outputs.size(); i++)
     {
         if (node.type == VM::NodeType::CUSTOM)
         {
-            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, node.outputs[i].name)->behaviour([this, i](){return m_vm.getOutput(this, m_id, i);});
+            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, node.outputs[i].name)->behaviour([this, i]()
+                                                                                                        { return m_vm.getOutput(this, m_id, i); });
         }
         else
         {
-            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, "Q")->behaviour([this,i](){return m_vm.getOutput(this, m_id, i);});
+            ImFlow::BaseNode::addOUT_uid<uint64_t>(node.outputs[i].id, "Q")->behaviour([this, i]()
+                                                                                       { return m_vm.getOutput(this, m_id, i); });
         }
     }
 }
@@ -66,7 +68,7 @@ void NodeEditor::draw()
     m_INF.update();
 }
 
-void NodeEditor::set_size(const ImVec2& size)
+void NodeEditor::set_size(const ImVec2 &size)
 {
     m_INF.setSize(size);
 }

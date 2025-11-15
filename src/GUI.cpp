@@ -96,10 +96,10 @@ void GUI::renderInProgressPopup(AppState &state)
 
 void GUI::renderErrorLogPopup(AppState &state)
 {
-    static std::string content; // file contents
-    static std::vector<char> contentBuf;        // mutable buffer for ImGui InputTextMultiline
+    static std::string content;          // file contents
+    static std::vector<char> contentBuf; // mutable buffer for ImGui InputTextMultiline
     static std::filesystem::path filePath;
-   
+
     if (state.showFile.enabled)
     {
         if (state.showFile.errorLog)
@@ -120,8 +120,7 @@ void GUI::renderErrorLogPopup(AppState &state)
         state.showFile.enabled = false; // Only open once
     }
 
-    if (ImGui::BeginPopupModal("showFile", nullptr, ImGuiWindowFlags_AlwaysAutoResize |
-            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar))
+    if (ImGui::BeginPopupModal("showFile", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar))
     {
         if (state.showFile.errorLog)
         {
@@ -160,15 +159,18 @@ void GUI::renderErrorLogPopup(AppState &state)
         ImGui::TextUnformatted("Contents:");
         ImGui::BeginChild("showFileContentChild", ImVec2(800, 400), true, ImGuiWindowFlags_HorizontalScrollbar);
 
-        if (!contentBuf.empty()) {
+        if (!contentBuf.empty())
+        {
             // InputTextMultiline accepts the mutable buffer and size.
             // We use ImGuiInputTextFlags_ReadOnly so the user can't edit it.
             ImGui::InputTextMultiline("##fileContents",
-                                    contentBuf.data(),
-                                    contentBuf.size(),
-                                    ImVec2(-1, -1),
-                                    ImGuiInputTextFlags_ReadOnly);
-        } else {
+                                      contentBuf.data(),
+                                      contentBuf.size(),
+                                      ImVec2(-1, -1),
+                                      ImGuiInputTextFlags_ReadOnly);
+        }
+        else
+        {
             ImGui::TextUnformatted("[file is empty]");
         }
 

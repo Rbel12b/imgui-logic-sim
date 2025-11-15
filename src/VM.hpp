@@ -28,7 +28,7 @@ public:
 
     struct Node
     {
-        using customComputeFunction = std::function<uint64_t(VM&, VM::NodeId&, ImFlow::BaseNode*, size_t)>;
+        using customComputeFunction = std::function<uint64_t(VM &, VM::NodeId &, ImFlow::BaseNode *, size_t)>;
 
         struct IOPin
         {

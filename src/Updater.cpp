@@ -4,7 +4,7 @@
 #include <fstream>
 #include "Rbel12b-cpplib/ProcessUtils/ProcessUtils.hpp"
 
-bool Updater::checkUpdate(AppState& state)
+bool Updater::checkUpdate(AppState &state)
 {
     auto versionFilePath = Utils::getUserDataDir() / ".version";
     if (!Utils::downloadFile(state.repoUrl + "/releases/latest/download/.version", versionFilePath, state))
@@ -18,7 +18,7 @@ bool Updater::checkUpdate(AppState& state)
     versionFile >> versionStr;
     versionFile.close();
 
-    std::cout << "latest version: " << versionStr << ", current version: " << state.version->m_version << "\n"; 
+    std::cout << "latest version: " << versionStr << ", current version: " << state.version->m_version << "\n";
 
     if (versionStr == "Not Found" || versionStr == "Not")
     {
@@ -36,7 +36,7 @@ bool Updater::checkUpdate(AppState& state)
     return false;
 }
 
-bool Updater::downloadUpdate(AppState& state)
+bool Updater::downloadUpdate(AppState &state)
 {
 #ifdef _WIN32
     auto newExePath = Utils::getUserDataDir() / "yt-dlp-beets-installer.exe";
@@ -57,7 +57,7 @@ bool Updater::downloadUpdate(AppState& state)
     return false;
 }
 
-void Updater::update(AppState& state)
+void Updater::update(AppState &state)
 {
 #ifdef _WIN32
     auto newExePath = Utils::getUserDataDir() / "yt-dlp-beets-installer.exe";
@@ -70,7 +70,7 @@ void Updater::update(AppState& state)
 
     proc.setCommand(newExePath);
     proc.setDetached(true);
-    
+
     if (proc.run())
     {
         std::cout << "Failed to start installer: " << newExePath << "\n";
