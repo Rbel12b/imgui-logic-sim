@@ -3,6 +3,7 @@
 #include <string>
 #include "Utils.hpp"
 #include "imgui_additions.hpp"
+#include "NodeLibrary.hpp"
 
 void GUI::render(AppState &state)
 {
@@ -16,14 +17,15 @@ void GUI::render(AppState &state)
     renderNewVersionPopup(state);
     renderInProgressPopup(state);
 
-    ImVec2 remainingSize = ImVec2(state.mainWindowSize.x, state.mainWindowSize.y - 24);
-    ImVec2 mainImGuiWindowPos(0, state.mainWindowSize.y - remainingSize.y);
-    ImVec2 mainImGuiWindowSize = remainingSize;
+    // ImVec2 remainingSize = ImVec2(state.mainWindowSize.x, state.mainWindowSize.y - 24);
+    // ImVec2 mainImGuiWindowPos(0, state.mainWindowSize.y - remainingSize.y);
+    // ImVec2 mainImGuiWindowSize = remainingSize;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
-    ImGui::SetNextWindowPos(mainImGuiWindowPos);
-    ImGui::SetNextWindowSize(mainImGuiWindowSize);
+    // ImGui::SetNextWindowPos(mainImGuiWindowPos);
+    // ImGui::SetNextWindowSize(mainImGuiWindowSize);
 
+    NodeLibrary::render(state);
     renderMain(state);
 
     ImGui::PopStyleVar();
@@ -49,7 +51,7 @@ void GUI::renderMenuBar(AppState &state)
 
 void GUI::renderMain(AppState &state)
 {
-    if (!ImGui::Begin("main", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
+    if (!ImGui::Begin("Editor", nullptr, ImGuiWindowFlags_NoTitleBar))
     {
         return;
     }

@@ -36,7 +36,7 @@ void CustomNode::draw()
 {
     if (m_drawfunc)
     {
-        m_drawfunc(m_vm, m_id);
+        m_drawfunc(m_vm, m_id, *this);
     }
 }
 

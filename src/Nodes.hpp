@@ -7,7 +7,7 @@
 class CustomNode : public ImFlow::BaseNode
 {
 public:
-    using DrawFunc = std::function<void(VM&, VM::NodeId&)>;
+    using DrawFunc = std::function<void(VM&, VM::NodeId&, CustomNode&)>;
     CustomNode(VM& vm, VM::NodeId id, DrawFunc drawfunc = nullptr);
 
     void draw() override;

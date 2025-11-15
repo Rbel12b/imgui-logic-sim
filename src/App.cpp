@@ -41,9 +41,6 @@ App::~App()
 
 void App::init()
 {
-    state.nodeEditor->addNode(VM::NodeType::NOT);
-    state.nodeEditor->addNode(VM::NodeType::AND);
-    state.nodeEditor->addNode(VM::NodeType::OR);
     state.nodeEditor->set_size(ImVec2(400, 640));
 }
 

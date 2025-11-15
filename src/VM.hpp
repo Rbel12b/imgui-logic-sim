@@ -12,7 +12,7 @@ class VM
 {
 public:
     typedef size_t NodeId; // 0 is an invalid ID.
-    typedef size_t PinId; // 0 is an invalid ID.
+    typedef size_t PinId;  // 0 is an invalid ID.
     enum class NodeType
     {
         unknown,
@@ -28,7 +28,7 @@ public:
 
     struct Node
     {
-        using customComputeFunction = std::function<void(Node&)>;
+        using customComputeFunction = std::function<uint64_t(Node &)>;
 
         struct IOPin
         {
@@ -49,16 +49,19 @@ public:
         customComputeFunction computeIO = nullptr;
 
         std::string name;
+
+        uint64_t n_data = 0;
+        void *p_data = nullptr;
     };
 
     NodeId getNewNodeId();
     PinId getNewPinId();
     void registerNode(NodeId id, NodeType type);
-    void registerNode(const Node& _node);
+    void registerNode(const Node &_node);
 
-    Node& getNode(NodeId id);
+    Node &getNode(NodeId id);
 
-    uint64_t getOutput(ImFlow::BaseNode* inf_node, NodeId id);
+    uint64_t getOutput(ImFlow::BaseNode *inf_node, NodeId id);
 
     // void registerLink(NodeId from, size_t fromNum, NodeId to, size_t toNum);
 
@@ -72,6 +75,6 @@ private:
     // void updatePinLink(Node::IOPin& pin, bool allowedRecompute = false);
 
     NodeId m_NodeIdCounter = 1; // value is always the next free ID
-    PinId m_PinIdCounter = 1; // value is always the next free ID
+    PinId m_PinIdCounter = 1;   // value is always the next free ID
     std::unordered_map<NodeId, Node> m_nodeData;
 };

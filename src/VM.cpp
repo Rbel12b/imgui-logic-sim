@@ -129,7 +129,7 @@ uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id)
     case NodeType::CUSTOM:
         if (node.computeIO)
         {
-            node.computeIO(node);
+            val = node.computeIO(node);
         }
         break;
 
