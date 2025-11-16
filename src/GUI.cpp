@@ -35,6 +35,11 @@ void GUI::renderMenuBar(AppState &state)
 {
     if (ImGui::BeginMenu("File"))
     {
+        if (ImGui::MenuItem("Save", "Ctrl+S"))
+        {
+            // Signal the application to exit
+            state.saveProject = true;
+        }
         if (ImGui::MenuItem("Exit", "Alt+F4"))
         {
             // Signal the application to exit

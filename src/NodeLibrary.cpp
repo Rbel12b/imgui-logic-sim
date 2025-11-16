@@ -93,8 +93,7 @@ namespace NodeLibrary
             VM::NodeType::CUSTOM,
             INPUT_NODE_INDEX,
             "Input",
-            0,
-            nullptr};
+            0};
 
     void render_inputNode(VM &vm, VM::NodeId &id, CustomNode &inf_node)
     {
@@ -115,8 +114,7 @@ namespace NodeLibrary
             VM::NodeType::CUSTOM,
             OUTPUT_NODE_INDEX,
             "Output",
-            0,
-            nullptr};
+            0};
 
     void render_outputNode(VM &vm, VM::NodeId &id, CustomNode &inf_node)
     {
@@ -137,8 +135,7 @@ namespace NodeLibrary
             VM::NodeType::CUSTOM,
             BUS_NODE1_INDEX,
             "",
-            2,
-            nullptr};
+            2};
 
     void render_busNode1(VM &vm, VM::NodeId &id, CustomNode &inf_node)
     {
@@ -185,8 +182,7 @@ namespace NodeLibrary
             VM::NodeType::CUSTOM,
             BUS_NODE2_INDEX,
             "",
-            2,
-            nullptr};
+            0};
 
     void render_busNode2(VM &vm, VM::NodeId &id, CustomNode &inf_node)
     {

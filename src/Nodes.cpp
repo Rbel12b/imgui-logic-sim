@@ -1,5 +1,7 @@
 #include "Nodes.hpp"
 #include "NodeLibrary.hpp"
+#include "Serializer.hpp"
+#include <fstream>
 
 CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
     : m_vm(vm), m_id(id), m_drawfunc(drawfunc)
@@ -77,6 +79,10 @@ void NodeEditor::set_size(const ImVec2 &size)
 
 void NodeEditor::save(const std::string &filepath)
 {
+    auto data = Serializer::editor_to_json(this);
+    std::ofstream f(filepath);
+    f << std::setw(2) << data << std::endl;
+    f.close();
 }
 
 void NodeEditor::load(const std::string &filepath)

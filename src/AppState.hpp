@@ -47,6 +47,22 @@ public:
     } showFile;
 
     NodeEditor *nodeEditor = nullptr;
+
+    // struct
+    // {
+    //     std::string title;
+    //     std::filesystem::path result;
+    //     enum class Type
+    //     {
+    //         OPEN,
+    //         SAVE,
+    //         FOLDER
+    //     };
+    //     Type type;
+    //     bool finished = false;
+    // } filedialog;
+
+    bool saveProject = false;
 };
 
 #endif // APP_STATE_H

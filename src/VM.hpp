@@ -49,7 +49,7 @@ public:
         std::string name;
 
         uint64_t n_data = 0;
-        void *p_data = nullptr;
+        // void *p_data = nullptr;
     };
 
     NodeId getNewNodeId();

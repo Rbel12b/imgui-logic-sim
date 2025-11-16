@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <iostream>
 #include <atomic>
+#include "tinyfiledialogs.h"
 
 #include "version.def"
 
@@ -57,6 +58,10 @@ void App::keyCallback(const SDL_KeyboardEvent &keyEvent)
         if (keyEvent.keysym.sym == SDLK_F4 && (keyEvent.keysym.mod & KMOD_ALT))
         {
             state.progamShouldExit = true;
+        }
+        if (keyEvent.keysym.sym == SDLK_s && (keyEvent.keysym.mod & KMOD_CTRL))
+        {
+            state.saveProject = true;
         }
     }
 }
@@ -112,6 +117,14 @@ int App::run(int argc, char **argv, std::filesystem::path logFile)
             }
             state.commandInProgress.enabled = false;
             state.commandInProgress.progress = -1;
+        }
+
+        if (state.saveProject)
+        {
+            const char *filters[] = {"*.json"};
+            std::string result = tinyfd_saveFileDialog("Save project", "project.json", 1, filters, NULL);
+            state.nodeEditor->save(result);
+            state.saveProject = false;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
