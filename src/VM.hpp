@@ -33,9 +33,6 @@ public:
         struct IOPin
         {
             uint8_t size = 1; // max 64 bits
-            // uint64_t state = 0; // state, if bit count (size) is less than 64 the right n bits are used.
-            // NodeId connectedNode = 0;
-            // size_t connectedPinNum = 0;
             std::string name;
             NodeId owner = 0;
             PinId id = 0;
@@ -60,19 +57,11 @@ public:
     void registerNode(const Node &_node);
 
     Node &getNode(NodeId id);
+    Node::IOPin &getPin(PinId id);
 
     uint64_t getOutput(ImFlow::BaseNode *inf_node, NodeId id, size_t outnum);
 
-    // void registerLink(NodeId from, size_t fromNum, NodeId to, size_t toNum);
-
-    // void updateInput(NodeId node, size_t inputNum, uint64_t state, bool allowedRecompute = false);
-
-    // Node& getIO(NodeId id, bool allowedRecompute = false);
-
-    // void update();
-
 private:
-    // void updatePinLink(Node::IOPin& pin, bool allowedRecompute = false);
 
     NodeId m_NodeIdCounter = 1; // value is always the next free ID
     PinId m_PinIdCounter = 1;   // value is always the next free ID

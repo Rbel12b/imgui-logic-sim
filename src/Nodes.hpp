@@ -4,6 +4,13 @@
 #include "VM.hpp"
 #include <functional>
 
+class ConnectionFilter
+{
+public:
+    static std::function<bool(ImFlow::Pin*, ImFlow::Pin*)> Default(VM& vm) { return [&vm](ImFlow::Pin* out, ImFlow::Pin* in) { return vm.getPin(out->getUid()).size == vm.getPin(in->getUid()).size; }; }
+};
+
+
 class CustomNode : public ImFlow::BaseNode
 {
 public:

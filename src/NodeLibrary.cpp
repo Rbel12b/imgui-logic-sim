@@ -70,7 +70,7 @@ namespace NodeLibrary
     VM::Node inputNode =
         {
             std::vector<VM::Node::IOPin>(),
-            std::vector<VM::Node::IOPin>({{1, "Q", 0, 0}}),
+            std::vector<VM::Node::IOPin>({{1, "", 0, 0}}),
             0,
             VM::NodeType::CUSTOM,
             [](VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node, size_t outnum)
@@ -89,7 +89,7 @@ namespace NodeLibrary
 
     VM::Node outputNode =
         {
-            std::vector<VM::Node::IOPin>({{1, "I", 0, 0}}),
+            std::vector<VM::Node::IOPin>({{1, "", 0, 0}}),
             std::vector<VM::Node::IOPin>(),
             0,
             VM::NodeType::CUSTOM,

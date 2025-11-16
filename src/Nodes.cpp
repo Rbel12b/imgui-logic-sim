@@ -11,11 +11,11 @@ CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
     {
         if (node.type == VM::NodeType::CUSTOM)
         {
-            ImFlow::BaseNode::addIN_uid<uint64_t>(node.inputs[i].id, node.inputs[i].name, 0, ImFlow::ConnectionFilter::SameType());
+            ImFlow::BaseNode::addIN_uid<uint64_t>(node.inputs[i].id, node.inputs[i].name, 0, ConnectionFilter::Default(vm));
         }
         else
         {
-            ImFlow::BaseNode::addIN_uid<uint64_t>(node.inputs[i].id, i ? "B" : "A", 0, ImFlow::ConnectionFilter::SameType());
+            ImFlow::BaseNode::addIN_uid<uint64_t>(node.inputs[i].id, i ? "B" : "A", 0, ConnectionFilter::Default(vm));
         }
     }
 
