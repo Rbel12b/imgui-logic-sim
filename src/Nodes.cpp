@@ -1,4 +1,5 @@
 #include "Nodes.hpp"
+#include "NodeLibrary.hpp"
 
 CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
     : m_vm(vm), m_id(id), m_drawfunc(drawfunc)
@@ -44,6 +45,7 @@ void CustomNode::draw()
 
 NodeEditor::NodeEditor()
 {
+    NodeLibrary::setupLibrary();
 }
 
 void NodeEditor::addNode(const VM::NodeType &type)
@@ -71,4 +73,12 @@ void NodeEditor::draw()
 void NodeEditor::set_size(const ImVec2 &size)
 {
     m_INF.setSize(size);
+}
+
+void NodeEditor::save(const std::string &filepath)
+{
+}
+
+void NodeEditor::load(const std::string &filepath)
+{
 }

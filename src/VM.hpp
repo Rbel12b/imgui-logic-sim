@@ -43,7 +43,8 @@ public:
 
         NodeId id = 0;
         NodeType type;
-        customComputeFunction computeIO = nullptr;
+        static std::vector<customComputeFunction> computeFunctionTable;
+        size_t computeIO = 0;
 
         std::string name;
 
@@ -60,8 +61,6 @@ public:
     Node::IOPin &getPin(PinId id);
 
     uint64_t getOutput(ImFlow::BaseNode *inf_node, NodeId id, size_t outnum);
-
-private:
 
     NodeId m_NodeIdCounter = 1; // value is always the next free ID
     PinId m_PinIdCounter = 1;   // value is always the next free ID

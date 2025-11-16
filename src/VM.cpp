@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <algorithm>
 
+std::vector<VM::Node::customComputeFunction> VM::Node::computeFunctionTable = {nullptr};
+
 VM::NodeId VM::getNewNodeId()
 {
     return m_NodeIdCounter++;
@@ -146,9 +148,9 @@ uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id, size_t outnum)
     switch (node.type)
     {
     case NodeType::CUSTOM:
-        if (node.computeIO)
+        if (node.computeIO < Node::computeFunctionTable.size() && Node::computeFunctionTable[node.computeIO])
         {
-            val = node.computeIO(*this, node.id, inf_node, outnum);
+            val = Node::computeFunctionTable[node.computeIO](*this, node.id, inf_node, outnum);
         }
         break;
 

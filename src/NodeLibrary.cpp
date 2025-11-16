@@ -1,7 +1,25 @@
 #include "NodeLibrary.hpp"
 
+#define CUSTOM_NODES_COUNT 4
+
+#define INPUT_NODE_INDEX 0
+#define OUTPUT_NODE_INDEX 1
+#define BUS_NODE1_INDEX 2
+#define BUS_NODE2_INDEX 3
+
+#define INIT_CUSTOM_NODE_FUNC(index, func) VM::Node::computeFunctionTable[index] = func;
+
 namespace NodeLibrary
 {
+    void setupLibrary()
+    {
+        VM::Node::computeFunctionTable.resize(CUSTOM_NODES_COUNT);
+        INIT_CUSTOM_NODE_FUNC(INPUT_NODE_INDEX, calc_inputNode);
+        INIT_CUSTOM_NODE_FUNC(OUTPUT_NODE_INDEX, calc_outputNode);
+        INIT_CUSTOM_NODE_FUNC(BUS_NODE1_INDEX, calc_busNode1);
+        INIT_CUSTOM_NODE_FUNC(BUS_NODE2_INDEX, calc_busNode2);
+    }
+
     void render(AppState &state)
     {
         if (!ImGui::Begin("Library", nullptr, ImGuiWindowFlags_NoTitleBar))
@@ -73,10 +91,7 @@ namespace NodeLibrary
             std::vector<VM::Node::IOPin>({{1, "", 0, 0}}),
             0,
             VM::NodeType::CUSTOM,
-            [](VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node, size_t outnum)
-            {
-                return vm.getNode(id).n_data;
-            },
+            INPUT_NODE_INDEX,
             "Input",
             0,
             nullptr};
@@ -87,16 +102,18 @@ namespace NodeLibrary
         ImGui::Checkbox("Val:", (bool *)&node.n_data);
     }
 
+    uint64_t calc_inputNode(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node, size_t outnum)
+    {
+        return vm.getNode(id).n_data;
+    }
+
     VM::Node outputNode =
         {
             std::vector<VM::Node::IOPin>({{1, "", 0, 0}}),
             std::vector<VM::Node::IOPin>(),
             0,
             VM::NodeType::CUSTOM,
-            [](VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node, size_t outnum)
-            {
-                return 0;
-            },
+            OUTPUT_NODE_INDEX,
             "Output",
             0,
             nullptr};
@@ -107,13 +124,18 @@ namespace NodeLibrary
         ImGui::Checkbox("", (bool *)&inf_node.getInVal<uint64_t>(node.inputs[0].id));
     }
 
+    uint64_t calc_outputNode(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node, size_t outnum)
+    {
+        return 0;
+    }
+
     VM::Node busNode1 =
         {
             std::vector<VM::Node::IOPin>({{2, "0", 0, 0}}),
             std::vector<VM::Node::IOPin>({{1, "0", 0, 0}, {1, "1", 0, 0}}),
             0,
             VM::NodeType::CUSTOM,
-            calc_busNode1,
+            BUS_NODE1_INDEX,
             "",
             2,
             nullptr};
@@ -161,7 +183,7 @@ namespace NodeLibrary
             std::vector<VM::Node::IOPin>({{2, "0", 0, 0}}),
             0,
             VM::NodeType::CUSTOM,
-            calc_busNode2,
+            BUS_NODE2_INDEX,
             "",
             2,
             nullptr};

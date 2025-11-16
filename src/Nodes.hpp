@@ -36,6 +36,19 @@ public:
 
     void set_size(const ImVec2 &size);
 
+    void save(const std::string &filepath);
+    void load(const std::string &filepath);
+
+    VM* getVM()
+    {
+        return &vm;
+    }
+
+    ImFlow::ImNodeFlow* getINF()
+    {
+        return &m_INF;
+    }
+
 private:
     ImFlow::ImNodeFlow m_INF;
     VM vm;
