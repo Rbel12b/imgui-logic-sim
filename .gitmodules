@@ -10,3 +10,6 @@
 [submodule "thirdparty/lib/ImNodeFlow"]
 	path = thirdparty/lib/ImNodeFlow
 	url = https://github.com/Fattorino/ImNodeFlow.git
+[submodule "thirdparty/lib/json"]
+	path = thirdparty/lib/json
+	url = https://github.com/nlohmann/json.git
