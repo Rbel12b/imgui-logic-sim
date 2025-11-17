@@ -13,3 +13,6 @@
 [submodule "thirdparty/lib/json"]
 	path = thirdparty/lib/json
 	url = https://github.com/nlohmann/json.git
+[submodule "thirdparty/lib/tinyfiledialogs"]
+	path = thirdparty/lib/tinyfiledialogs
+	url = https://git.code.sf.net/p/tinyfiledialogs/code

@@ -7,7 +7,7 @@ set(VERSION_FILE_OUT    "${CMAKE_BINARY_DIR}/version.def")
 
 file(READ ${VERSION_FILE} VERSION_STRING)
 
-project(${APP_NAME} VERSION ${VERSION_STRING} LANGUAGES CXX)
+project(${APP_NAME} VERSION ${VERSION_STRING} LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -38,7 +38,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
   src/*.cpp
   thirdparty/lib/imgui_additions.cpp
   thirdparty/lib/ImNodeFlow/src/ImNodeFlow.cpp
-  thirdparty/lib/tinyfiledialogs/tinyfiledialogs.cpp
+  thirdparty/lib/tinyfiledialogs/tinyfiledialogs.c
 )
 
 # --- Add to target executable ---
