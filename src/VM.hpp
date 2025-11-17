@@ -13,6 +13,7 @@ class VM
 public:
     typedef size_t NodeId; // 0 is an invalid ID.
     typedef size_t PinId;  // 0 is an invalid ID.
+    /* always add to the end of the list so existing projects don't break*/
     enum class NodeType
     {
         unknown,
@@ -23,12 +24,14 @@ public:
         NOR,
         XOR,
         XNOR,
-        CUSTOM
+        CUSTOM,
+        BUFFER
     };
 
     struct Node
     {
-        using customComputeFunction = std::function<uint64_t(VM &, VM::NodeId &, ImFlow::BaseNode *, size_t)>;
+        using customComputeFunc = std::function<uint64_t(VM &, VM::NodeId &, ImFlow::BaseNode *, size_t)>;
+        using customDrawFunc = std::function<void(VM &, VM::NodeId &, ImFlow::BaseNode *)>;
 
         struct IOPin
         {
@@ -43,8 +46,10 @@ public:
 
         NodeId id = 0;
         NodeType type;
-        static std::vector<customComputeFunction> computeFunctionTable;
+        static std::vector<customComputeFunc> computeFunctionTable;
+        static std::vector<customDrawFunc> drawFunctionTable;
         size_t computeIO = 0;
+        size_t draw = 0;
 
         std::string name;
 

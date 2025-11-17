@@ -3,10 +3,11 @@
 #include "Serializer.hpp"
 #include <fstream>
 
-CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
-    : m_vm(vm), m_id(id), m_drawfunc(drawfunc)
+CustomNode::CustomNode(VM &vm, VM::NodeId id)
+    : m_vm(vm), m_id(id)
 {
     auto node = m_vm.getNode(id);
+    m_drawfuncId = node.draw;
 
     setTitle(node.name);
     setStyle(ImFlow::NodeStyle::cyan());
@@ -39,9 +40,9 @@ CustomNode::CustomNode(VM &vm, VM::NodeId id, DrawFunc drawfunc)
 
 void CustomNode::draw()
 {
-    if (m_drawfunc)
+    if (m_vm.getNode(m_id).type == VM::NodeType::CUSTOM && m_drawfuncId < VM::Node::drawFunctionTable.size() && VM::Node::drawFunctionTable[m_drawfuncId])
     {
-        m_drawfunc(m_vm, m_id, *this);
+        VM::Node::drawFunctionTable[m_drawfuncId](m_vm, m_id, this);
     }
 }
 
@@ -54,17 +55,17 @@ void NodeEditor::addNode(const VM::NodeType &type)
 {
     auto id = vm.getNewNodeId();
     vm.registerNode(id, type);
-    m_INF.addNode<CustomNode>(ImVec2(100, 100), vm, id);
+    m_INF.addNode_uid<CustomNode>(id, ImVec2(100, 100), vm, id);
 }
 
-void NodeEditor::addNode(VM::Node node, CustomNode::DrawFunc drawFunc)
+void NodeEditor::addNode(VM::Node node, ImVec2 pos)
 {
     if (node.id == 0)
     {
         node.id = vm.getNewNodeId();
     }
     vm.registerNode(node);
-    m_INF.addNode<CustomNode>(ImVec2(100, 100), vm, node.id, drawFunc);
+    m_INF.addNode_uid<CustomNode>(node.id, pos, vm, node.id);
 }
 
 void NodeEditor::draw()
@@ -81,10 +82,16 @@ void NodeEditor::save(const std::string &filepath)
 {
     auto data = Serializer::editor_to_json(this);
     std::ofstream f(filepath);
-    f << std::setw(2) << data << std::endl;
+    f << std::setw(0) << data << std::endl;
     f.close();
 }
 
 void NodeEditor::load(const std::string &filepath)
 {
+    std::ifstream f(filepath);
+    json data;
+    f >> data;
+    f.close();
+    m_INF = ImFlow::ImNodeFlow();
+    Serializer::json_to_editor(this, data);
 }

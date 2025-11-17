@@ -14,6 +14,7 @@ class AppState;
 #include "Renderer.hpp"
 #include "Updater.hpp"
 #include "imgui.h"
+#include <mutex>
 
 class AppState
 {
@@ -47,6 +48,7 @@ public:
     } showFile;
 
     NodeEditor *nodeEditor = nullptr;
+    std::mutex editorMutex;
 
     // struct
     // {
@@ -63,6 +65,7 @@ public:
     // } filedialog;
 
     bool saveProject = false;
+    bool loadProject = false;
 };
 
 #endif // APP_STATE_H

@@ -2,7 +2,8 @@
 #include <stdexcept>
 #include <algorithm>
 
-std::vector<VM::Node::customComputeFunction> VM::Node::computeFunctionTable = {nullptr};
+std::vector<VM::Node::customComputeFunc> VM::Node::computeFunctionTable = {nullptr};
+std::vector<VM::Node::customDrawFunc> VM::Node::drawFunctionTable = {nullptr};
 
 VM::NodeId VM::getNewNodeId()
 {
@@ -22,6 +23,7 @@ void VM::registerNode(NodeId id, NodeType type)
     switch (type)
     {
     case NodeType::NOT:
+    case NodeType::BUFFER:
         node.inputs.push_back({1, "", id, getNewPinId()});
         node.outputs.push_back({1, "", id, getNewPinId()});
         break;
@@ -41,6 +43,10 @@ void VM::registerNode(NodeId id, NodeType type)
     {
     case NodeType::NOT:
         node.name = "NOT";
+        break;
+
+    case NodeType::BUFFER:
+        node.name = "BUFFER";
         break;
 
     case NodeType::AND:
@@ -156,6 +162,10 @@ uint64_t VM::getOutput(ImFlow::BaseNode *inf_node, NodeId id, size_t outnum)
 
     case NodeType::NOT:
         val = !inf_node->getInVal<uint64_t>(node.inputs[0].id);
+        break;
+
+    case NodeType::BUFFER:
+        val = inf_node->getInVal<uint64_t>(node.inputs[0].id);
         break;
 
     case NodeType::AND:

@@ -63,6 +63,10 @@ void App::keyCallback(const SDL_KeyboardEvent &keyEvent)
         {
             state.saveProject = true;
         }
+        if (keyEvent.keysym.sym == SDLK_o && (keyEvent.keysym.mod & KMOD_CTRL))
+        {
+            state.loadProject = true;
+        }
     }
 }
 
@@ -123,8 +127,18 @@ int App::run(int argc, char **argv, std::filesystem::path logFile)
         {
             const char *filters[] = {"*.json"};
             std::string result = tinyfd_saveFileDialog("Save project", "project.json", 1, filters, NULL);
+            std::lock_guard lock(state.editorMutex);
             state.nodeEditor->save(result);
             state.saveProject = false;
+        }
+
+        if (state.loadProject)
+        {
+            const char *filters[] = {"*.json"};
+            std::string result = tinyfd_openFileDialog("Save project", "project.json", 1, filters, NULL, false);
+            std::lock_guard lock(state.editorMutex);
+            state.nodeEditor->load(result);
+            state.loadProject = false;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

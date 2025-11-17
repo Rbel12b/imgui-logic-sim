@@ -7,17 +7,24 @@
 #define BUS_NODE1_INDEX 2
 #define BUS_NODE2_INDEX 3
 
-#define INIT_CUSTOM_NODE_FUNC(index, func) VM::Node::computeFunctionTable[index] = func;
+#define INIT_CUSTOM_NODE_CALC_FUNC(index, func) VM::Node::computeFunctionTable[index] = func;
+#define INIT_CUSTOM_NODE_DRAW_FUNC(index, func) VM::Node::drawFunctionTable[index] = func;
 
 namespace NodeLibrary
 {
     void setupLibrary()
     {
         VM::Node::computeFunctionTable.resize(CUSTOM_NODES_COUNT);
-        INIT_CUSTOM_NODE_FUNC(INPUT_NODE_INDEX, calc_inputNode);
-        INIT_CUSTOM_NODE_FUNC(OUTPUT_NODE_INDEX, calc_outputNode);
-        INIT_CUSTOM_NODE_FUNC(BUS_NODE1_INDEX, calc_busNode1);
-        INIT_CUSTOM_NODE_FUNC(BUS_NODE2_INDEX, calc_busNode2);
+        INIT_CUSTOM_NODE_CALC_FUNC(INPUT_NODE_INDEX, calc_inputNode);
+        INIT_CUSTOM_NODE_CALC_FUNC(OUTPUT_NODE_INDEX, calc_outputNode);
+        INIT_CUSTOM_NODE_CALC_FUNC(BUS_NODE1_INDEX, calc_busNode1);
+        INIT_CUSTOM_NODE_CALC_FUNC(BUS_NODE2_INDEX, calc_busNode2);
+
+        VM::Node::drawFunctionTable.resize(CUSTOM_NODES_COUNT);
+        INIT_CUSTOM_NODE_DRAW_FUNC(INPUT_NODE_INDEX, render_inputNode);
+        INIT_CUSTOM_NODE_DRAW_FUNC(OUTPUT_NODE_INDEX, render_outputNode);
+        INIT_CUSTOM_NODE_DRAW_FUNC(BUS_NODE1_INDEX, render_busNode1);
+        INIT_CUSTOM_NODE_DRAW_FUNC(BUS_NODE2_INDEX, render_busNode2);
     }
 
     void render(AppState &state)
@@ -32,19 +39,23 @@ namespace NodeLibrary
         {
             if (ImGui::Button("Input"))
             {
-                nodeEditor.addNode(inputNode, render_inputNode);
+                nodeEditor.addNode(inputNode);
             }
             if (ImGui::Button("Output"))
             {
-                nodeEditor.addNode(outputNode, render_outputNode);
+                nodeEditor.addNode(outputNode);
             }
             if (ImGui::Button("bus 1"))
             {
-                nodeEditor.addNode(busNode1, render_busNode1);
+                nodeEditor.addNode(busNode1);
             }
             if (ImGui::Button("bus 2"))
             {
-                nodeEditor.addNode(busNode2, render_busNode2);
+                nodeEditor.addNode(busNode2);
+            }
+            if (ImGui::Button("Buffer"))
+            {
+                nodeEditor.addNode(VM::NodeType::BUFFER);
             }
             ImGui::TreePop();
         }
@@ -92,13 +103,14 @@ namespace NodeLibrary
             0,
             VM::NodeType::CUSTOM,
             INPUT_NODE_INDEX,
+            INPUT_NODE_INDEX,
             "Input",
             0};
 
-    void render_inputNode(VM &vm, VM::NodeId &id, CustomNode &inf_node)
+    void render_inputNode(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node)
     {
         auto &node = vm.getNode(id);
-        ImGui::Checkbox("Val:", (bool *)&node.n_data);
+        ImGui::Checkbox("", (bool *)&node.n_data);
     }
 
     uint64_t calc_inputNode(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node, size_t outnum)
@@ -113,13 +125,14 @@ namespace NodeLibrary
             0,
             VM::NodeType::CUSTOM,
             OUTPUT_NODE_INDEX,
+            OUTPUT_NODE_INDEX,
             "Output",
             0};
 
-    void render_outputNode(VM &vm, VM::NodeId &id, CustomNode &inf_node)
+    void render_outputNode(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node)
     {
         auto &node = vm.getNode(id);
-        ImGui::Checkbox("", (bool *)&inf_node.getInVal<uint64_t>(node.inputs[0].id));
+        ImGui::Checkbox("", (bool *)&inf_node->getInVal<uint64_t>(node.inputs[0].id));
     }
 
     uint64_t calc_outputNode(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node, size_t outnum)
@@ -134,10 +147,11 @@ namespace NodeLibrary
             0,
             VM::NodeType::CUSTOM,
             BUS_NODE1_INDEX,
+            BUS_NODE1_INDEX,
             "",
             2};
 
-    void render_busNode1(VM &vm, VM::NodeId &id, CustomNode &inf_node)
+    void render_busNode1(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node)
     {
         auto &node = vm.getNode(id);
         ImGui::SetNextItemWidth(80.0f);
@@ -153,14 +167,14 @@ namespace NodeLibrary
             }
             for (size_t i = 0; i < node.outputs.size(); i++)
             {
-                inf_node.dropOUT(node.outputs[i].id);
+                inf_node->dropOUT(node.outputs[i].id);
             }
             node.outputs.clear();
             for (size_t i = 0; i < node.n_data; i++)
             {
                 node.outputs.push_back({1, std::to_string(i), 0, vm.getNewPinId()});
-                inf_node.addOUT_uid<uint64_t>(node.outputs[i].id, std::to_string(i))->behaviour([&vm, &id, &inf_node, i]()
-                                                                                                { return vm.getOutput(&inf_node, id, i); });
+                inf_node->addOUT_uid<uint64_t>(node.outputs[i].id, std::to_string(i))->behaviour([&vm, &id, inf_node, i]()
+                                                                                                 { return vm.getOutput(inf_node, id, i); });
             }
             node.inputs[0].size = node.n_data;
         }
@@ -181,10 +195,11 @@ namespace NodeLibrary
             0,
             VM::NodeType::CUSTOM,
             BUS_NODE2_INDEX,
+            BUS_NODE2_INDEX,
             "",
             0};
 
-    void render_busNode2(VM &vm, VM::NodeId &id, CustomNode &inf_node)
+    void render_busNode2(VM &vm, VM::NodeId &id, ImFlow::BaseNode *inf_node)
     {
         auto &node = vm.getNode(id);
         ImGui::SetNextItemWidth(80.0f);
@@ -200,13 +215,13 @@ namespace NodeLibrary
             }
             for (size_t i = 0; i < node.inputs.size(); i++)
             {
-                inf_node.dropIN(node.inputs[i].id);
+                inf_node->dropIN(node.inputs[i].id);
             }
             node.inputs.clear();
             for (size_t i = 0; i < node.n_data; i++)
             {
                 node.inputs.push_back({1, std::to_string(i), 0, vm.getNewPinId()});
-                inf_node.addIN_uid<uint64_t>(node.inputs[i].id, std::to_string(i), 0, ImFlow::ConnectionFilter::SameType());
+                inf_node->addIN_uid<uint64_t>(node.inputs[i].id, std::to_string(i), 0, ImFlow::ConnectionFilter::SameType());
             }
             node.outputs[0].size = node.n_data;
         }

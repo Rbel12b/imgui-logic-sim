@@ -37,8 +37,11 @@ void GUI::renderMenuBar(AppState &state)
     {
         if (ImGui::MenuItem("Save", "Ctrl+S"))
         {
-            // Signal the application to exit
             state.saveProject = true;
+        }
+        if (ImGui::MenuItem("Open", "Ctrl+O"))
+        {
+            state.loadProject = true;
         }
         if (ImGui::MenuItem("Exit", "Alt+F4"))
         {
@@ -61,6 +64,7 @@ void GUI::renderMain(AppState &state)
         return;
     }
     auto size = ImGui::GetContentRegionAvail();
+    std::lock_guard lock(state.editorMutex);
     state.nodeEditor->set_size(size);
     state.nodeEditor->draw();
     ImGui::End();
