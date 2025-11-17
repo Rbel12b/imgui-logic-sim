@@ -10,6 +10,7 @@ json Serializer::editor_to_json(NodeEditor *_editor)
     json json_editor;
     json_editor["vm"] = vm_to_json(editor.getVM(), editor.getINF());
     json_editor["inf"] = inf_to_json(editor.getINF());
+    json_editor["version"] = 1; // versioning for future compatibility, not the actual app version, just the file format version
     return json_editor;
 }
 
@@ -28,38 +29,38 @@ json Serializer::vm_to_json(VM *_vm, ImFlow::ImNodeFlow *_inf)
             continue; // the node has been deleted
         auto pos = _inf->getNodes()[id]->getPos();
         json json_node;
-        json_node["id"] = node.id;
-        json_node["type"] = static_cast<int>(node.type);
-        json_node["name"] = node.name;
-        json_node["n_data"] = node.n_data;
-        json_node["calc"] = node.computeIO;
-        json_node["draw"] = node.draw;
-        json_node["pos_x"] = pos.x;
-        json_node["pos_y"] = pos.y;
+        json_node["i"] = node.id;
+        json_node["t"] = static_cast<int>(node.type);
+        json_node["n"] = node.name;
+        json_node["u"] = node.n_data;
+        json_node["c"] = node.computeIO;
+        json_node["d"] = node.draw;
+        json_node["x"] = pos.x;
+        json_node["y"] = pos.y;
 
         std::vector<json> json_input_array;
         for (const auto &input : node.inputs)
         {
             json json_input;
-            json_input["size"] = input.size;
-            json_input["name"] = input.name;
-            json_input["owner"] = input.owner;
-            json_input["id"] = input.id;
+            json_input["s"] = input.size;
+            json_input["n"] = input.name;
+            json_input["o"] = input.owner;
+            json_input["i"] = input.id;
             json_input_array.push_back(json_input);
         }
-        json_node["inputs"] = json_input_array;
+        json_node["is"] = json_input_array;
 
         std::vector<json> json_output_array;
         for (const auto &output : node.outputs)
         {
             json json_output;
-            json_output["size"] = output.size;
-            json_output["name"] = output.name;
-            json_output["owner"] = output.owner;
-            json_output["id"] = output.id;
+            json_output["s"] = output.size;
+            json_output["n"] = output.name;
+            json_output["o"] = output.owner;
+            json_output["i"] = output.id;
             json_output_array.push_back(json_output);
         }
-        json_node["outputs"] = json_output_array;
+        json_node["os"] = json_output_array;
         json_node_array.push_back(json_node);
     }
     json_vm["nodes"] = json_node_array;
@@ -85,8 +86,8 @@ json Serializer::inf_to_json(ImFlow::ImNodeFlow *_inf)
         {
             continue;
         }
-        json_link["left"] = link->left()->getUid();
-        json_link["right"] = link->right()->getUid();
+        json_link["l"] = link->left()->getUid();
+        json_link["r"] = link->right()->getUid();
         json_link_array.push_back(json_link);
     }
     json_inf["links"] = json_link_array;
@@ -99,6 +100,14 @@ void Serializer::json_to_editor(NodeEditor *_editor, json &data)
     {
         return;
     }
+    if (data.contains("version"))
+    {
+        int version = data["version"].get<int>();
+        if (version != 1)
+        {
+            return;
+        }
+    }
     if (data.contains("vm"))
     {
         json_to_vm(_editor->getVM(), _editor->getINF(), *_editor, data["vm"]);
@@ -110,10 +119,10 @@ void Serializer::json_to_editor(NodeEditor *_editor, json &data)
         for (auto link : data["inf"]["links"])
         {
             VM::PinId left = 0, right = 0;
-            if (link.contains("left"))
-                left = link["left"].get<size_t>();
-            if (link.contains("right"))
-                right = link["right"].get<size_t>();
+            if (link.contains("l"))
+                left = link["l"].get<size_t>();
+            if (link.contains("r"))
+                right = link["r"].get<size_t>();
 
             if (left == 0 || right == 0)
                 continue;
@@ -169,58 +178,58 @@ void Serializer::json_to_vm(VM *_vm, ImFlow::ImNodeFlow *_inf, NodeEditor &edito
     for (const auto &json_node : data["nodes"])
     {
         VM::Node node;
-        if (json_node.contains("id"))
-            node.id = json_node["id"].get<size_t>();
-        if (json_node.contains("type"))
-            node.type = static_cast<VM::NodeType>(json_node["type"].get<int>());
-        if (json_node.contains("name"))
-            node.name = json_node["name"].get<std::string>();
-        if (json_node.contains("n_data"))
-            node.n_data = json_node["n_data"].get<size_t>();
-        if (json_node.contains("calc"))
-            node.computeIO = json_node["calc"].get<size_t>();
-        if (json_node.contains("draw"))
-            node.draw = json_node["draw"].get<size_t>();
+        if (json_node.contains("i"))
+            node.id = json_node["i"].get<size_t>();
+        if (json_node.contains("t"))
+            node.type = static_cast<VM::NodeType>(json_node["t"].get<int>());
+        if (json_node.contains("n"))
+            node.name = json_node["n"].get<std::string>();
+        if (json_node.contains("u"))
+            node.n_data = json_node["u"].get<size_t>();
+        if (json_node.contains("c"))
+            node.computeIO = json_node["c"].get<size_t>();
+        if (json_node.contains("d"))
+            node.draw = json_node["d"].get<size_t>();
 
-        if (json_node.contains("inputs"))
+        if (json_node.contains("is"))
         {
-            for (const auto &json_input : json_node["inputs"])
+            for (const auto &json_input : json_node["is"])
             {
                 VM::Node::IOPin input;
-                if (json_node.contains("size"))
-                    input.size = json_input["size"].get<size_t>();
-                if (json_node.contains("name"))
-                    input.name = json_input["name"].get<std::string>();
-                if (json_node.contains("owner"))
-                    input.owner = json_input["owner"].get<size_t>();
-                if (json_node.contains("id"))
-                    input.id = json_input["id"].get<size_t>();
+                if (json_node.contains("s"))
+                    input.size = json_input["s"].get<size_t>();
+                if (json_node.contains("n"))
+                    input.name = json_input["n"].get<std::string>();
+                if (json_node.contains("o"))
+                    input.owner = json_input["o"].get<size_t>();
+                if (json_node.contains("i"))
+                    input.id = json_input["i"].get<size_t>();
                 node.inputs.push_back(input);
             }
         }
 
-        if (json_node.contains("outputs"))
+        if (json_node.contains("os"))
         {
-            for (const auto &json_output : json_node["outputs"])
+            for (const auto &json_output : json_node["os"])
             {
                 VM::Node::IOPin output;
-                if (json_node.contains("size"))
-                    output.size = json_output["size"].get<size_t>();
-                if (json_node.contains("name"))
-                    output.name = json_output["name"].get<std::string>();
-                if (json_node.contains("owner"))
-                    output.owner = json_output["owner"].get<size_t>();
-                if (json_node.contains("id"))
-                    output.id = json_output["id"].get<size_t>();
+                if (json_node.contains("s"))
+                    output.size = json_output["s"].get<size_t>();
+                if (json_node.contains("n"))
+                    output.name = json_output["n"].get<std::string>();
+                if (json_node.contains("o"))
+                    output.owner = json_output["o"].get<size_t>();
+                if (json_node.contains("i"))
+                    output.id = json_output["i"].get<size_t>();
                 node.outputs.push_back(output);
             }
         }
 
         ImVec2 pos;
-        if (json_node.contains("pos_x"))
-            pos.x = json_node["pos_x"].get<float>();
-        if (json_node.contains("pos_y"))
-            pos.y = json_node["pos_y"].get<float>();
+        if (json_node.contains("x"))
+            pos.x = json_node["x"].get<float>();
+        if (json_node.contains("y"))
+            pos.y = json_node["y"].get<float>();
 
         editor.addNode(node, pos);
     }
