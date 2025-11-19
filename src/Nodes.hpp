@@ -31,8 +31,10 @@ class NodeEditor
 {
 public:
     NodeEditor();
-    void addNode(const VM::NodeType &type);
-    void addNode(VM::Node node, ImVec2 pos = {100, 100});
+    VM::NodeId addNode(const VM::NodeType &type, ImVec2 pos);
+    VM::NodeId addNode(VM::Node node, ImVec2 pos);
+    VM::NodeId addNode(const VM::NodeType &type);
+    VM::NodeId addNode(VM::Node node);
 
     void draw();
 

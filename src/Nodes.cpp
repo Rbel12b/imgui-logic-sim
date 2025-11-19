@@ -51,14 +51,15 @@ NodeEditor::NodeEditor()
     NodeLibrary::setupLibrary();
 }
 
-void NodeEditor::addNode(const VM::NodeType &type)
+VM::NodeId NodeEditor::addNode(const VM::NodeType &type, ImVec2 pos)
 {
     auto id = vm.getNewNodeId();
     vm.registerNode(id, type);
-    m_INF.addNode_uid<CustomNode>(id, ImVec2(100, 100), vm, id);
+    m_INF.addNode_uid<CustomNode>(id, pos, vm, id);
+    return id;
 }
 
-void NodeEditor::addNode(VM::Node node, ImVec2 pos)
+VM::NodeId NodeEditor::addNode(VM::Node node, ImVec2 pos)
 {
     if (node.id == 0)
     {
@@ -66,6 +67,19 @@ void NodeEditor::addNode(VM::Node node, ImVec2 pos)
     }
     vm.registerNode(node);
     m_INF.addNode_uid<CustomNode>(node.id, pos, vm, node.id);
+    return node.id;
+}
+
+VM::NodeId NodeEditor::addNode(const VM::NodeType &type)
+{
+    auto id = addNode(type, {100, 100});
+    return id;
+}
+
+VM::NodeId NodeEditor::addNode(VM::Node node)
+{
+    auto id = addNode(node, {100, 100});
+    return id;
 }
 
 void NodeEditor::draw()
